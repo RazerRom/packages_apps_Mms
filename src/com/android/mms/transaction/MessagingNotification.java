@@ -52,6 +52,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -1125,6 +1126,9 @@ public class MessagingNotification {
         final NotificationCompat.Builder noti = new NotificationCompat.Builder(context)
                 .setWhen(mostRecentNotification.mTimeMillis);
 
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean isHeadsUp = sp.getBoolean(MessagingPreferenceActivity.HEADS_UP_MODE_ENABLED, true);
+
         if (isNew) {
             noti.setTicker(mostRecentNotification.mTicker);
         }
@@ -1242,6 +1246,14 @@ public class MessagingNotification {
             qmIntent.putExtra(QuickMessagePopup.SMS_FROM_NAME_EXTRA, mostRecentNotification.mSender.getName());
             qmIntent.putExtra(QuickMessagePopup.SMS_FROM_NUMBER_EXTRA, mostRecentNotification.mSender.getNumber());
             qmIntent.putExtra(QuickMessagePopup.SMS_NOTIFICATION_OBJECT_EXTRA, mostRecentNotification);
+        }
+
+        if (isHeadsUp && (!qmPopupEnabled || qmPopupEnabled && qmIntent == null)) {
+            Bundle extras = new Bundle();
+            // Request a heads up notification.
+            extras.putInt(Notification.EXTRA_AS_HEADS_UP,
+                    Notification.HEADS_UP_REQUESTED);
+            noti.setExtras(extras);
         }
 
         // Start getting the notification ready
