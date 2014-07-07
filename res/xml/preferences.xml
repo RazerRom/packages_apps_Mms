@@ -199,39 +199,45 @@
 
   <PreferenceCategory android:title="@string/pref_mms_settings_title"
                       android:key="pref_key_mms_settings">
-    <SwitchPreference 
+
+    <SwitchPreference
             android:defaultValue="true"
             android:key="pref_key_mms_group_mms"
             android:summary="@string/pref_summary_mms_group_mms"
             android:title="@string/pref_title_mms_group_mms" />
             
-    <SwitchPreference 
+    <SwitchPreference
             android:defaultValue="@bool/def_mms_delivery_reports"
             android:key="pref_key_mms_delivery_reports"
             android:summary="@string/pref_summary_mms_delivery_reports"
             android:title="@string/pref_title_mms_delivery_reports" />
             
-    <SwitchPreference 
+    <SwitchPreference
             android:defaultValue="false"
             android:key="pref_key_mms_read_reports"
             android:summary="@string/pref_summary_mms_read_reports"
             android:title="@string/pref_title_mms_read_reports" />
             
-    <SwitchPreference 
+    <SwitchPreference
             android:defaultValue="@bool/def_sms_auto_retrieval"
             android:key="pref_key_mms_auto_retrieval"
             android:title="@string/pref_title_mms_auto_retrieval"
             android:summary="@string/pref_summary_mms_auto_retrieval" />
             
-    <SwitchPreference 
+    <SwitchPreference
             android:layout="?android:attr/preferenceLayoutChild"
             android:dependency="pref_key_mms_auto_retrieval"
             android:defaultValue="false"
             android:key="pref_key_mms_retrieval_during_roaming"
             android:title="@string/pref_title_mms_retrieval_during_roaming"
             android:summary="@string/pref_summary_mms_retrieval_during_roaming" />
-            
-    <ListPreference 
+
+    <SwitchPreference android:defaultValue="@bool/enable_data_for_mms"
+                      android:key="pref_key_mms_auto_enable_data"
+                      android:title="@string/pref_title_mms_auto_enable_data"
+                      android:summary="@string/pref_summary_mms_auto_enable_data" />
+
+    <ListPreference
             android:key="pref_key_mms_expiry"
             android:title="@string/pref_title_validity_period"
             android:dialogTitle="@string/pref_title_validity_period"
@@ -240,7 +246,7 @@
             android:entryValues="@array/save_time_values"
             android:defaultValue="0" />
             
-    <ListPreference 
+    <ListPreference
             android:key="pref_key_mms_expiry_slot1"
             android:title="@string/pref_title_validity_period_slot1"
             android:dialogTitle="@string/pref_title_validity_period"
@@ -249,7 +255,7 @@
             android:entryValues="@array/save_time_values"
             android:defaultValue="0" />
             
-    <ListPreference 
+    <ListPreference
             android:key="pref_key_mms_expiry_slot2"
             android:title="@string/pref_title_validity_period_slot2"
             android:dialogTitle="@string/pref_title_validity_period"
