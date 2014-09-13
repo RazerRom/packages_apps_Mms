@@ -1207,8 +1207,6 @@ public class MessagingNotification {
         int defaults = 0;
 
         if (isNew) {
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-
             if (conversationSettings.getVibrateEnabled()) {
                 String pattern = conversationSettings.getVibratePattern();
 
