@@ -2497,6 +2497,9 @@ public class ComposeMessageActivity extends Activity
 
         mIsPickingContact = false;
         addRecipientsListeners();
+        if (isRecipientsEditorVisible()) {
+            mRecipientsEditor.addTextChangedListener(mRecipientsWatcher);
+        }
 
         if (isRecipientsEditorVisible()) {
             mRecipientsEditor.addTextChangedListener(mRecipientsWatcher);
