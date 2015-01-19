@@ -726,9 +726,6 @@ public class MessagingNotification {
     // Return a formatted string with all the sender names separated by commas.
     private static CharSequence formatSenders(Context context,
             ArrayList<NotificationInfo> senders) {
-        final TextAppearanceSpan notificationSenderSpan = new TextAppearanceSpan(
-                context, R.style.NotificationPrimaryText);
-
         String separator = context.getString(R.string.enumeration_comma);   // ", "
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         int len = senders.size();
@@ -738,8 +735,7 @@ public class MessagingNotification {
             }
             spannableStringBuilder.append(senders.get(i).mSender.getName());
         }
-        spannableStringBuilder.setSpan(notificationSenderSpan, 0,
-                spannableStringBuilder.length(), 0);
+
         return spannableStringBuilder;
     }
 
