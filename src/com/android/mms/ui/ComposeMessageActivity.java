@@ -3968,7 +3968,8 @@ public class ComposeMessageActivity extends Activity
                 log("resize image " + uri);
             }
             MessageUtils.resizeImageAsync(ComposeMessageActivity.this,
-                    uri, mAttachmentEditorHandler, mResizeImageCallback, append);
+                    uri, mWorkingMessage.getSlideshow().getCurrentMessageSize(),
+                    mAttachmentEditorHandler, mResizeImageCallback, append);
             return;
         }
 
