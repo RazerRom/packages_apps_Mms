@@ -48,185 +48,249 @@
                       android:title="@string/pref_mms_clear_search_history_title"
                       android:summary="@string/pref_mms_clear_search_history_summary" />
 -->
-     <SwitchPreference android:defaultValue="true"
-                      android:key="pref_key_auto_delete"
-                      android:summary="@string/pref_summary_auto_delete"
-                      android:title="@string/pref_title_auto_delete" />
-    <Preference android:key="pref_key_sms_delete_limit"
-                      android:dependency="pref_key_auto_delete"
-                      android:persistent="false"
-                      android:summary="@string/pref_summary_delete_limit"
-                      android:title="@string/pref_title_sms_delete" />
-    <Preference android:key="pref_key_mms_delete_limit"
-                      android:dependency="pref_key_auto_delete"
-                      android:persistent="false"
-                      android:summary="@string/pref_summary_delete_limit"
-                      android:title="@string/pref_title_mms_delete" />
-    <ListPreference android:key="pref_key_sms_store"
-                      android:title="@string/pref_title_sms_store"
-                      android:defaultValue="@string/def_sms_store_value"
-                      android:dialogTitle="@string/pref_title_sms_store"
-                      android:entries="@array/entries_sms_store"
-                      android:entryValues="@array/entries_sms_store_value" />
-    <ListPreference android:key="pref_key_sms_store_card1"
-                      android:title="@string/pref_title_sms_store_card1"
-                      android:defaultValue="@string/def_sms_store_card1_value"
-                      android:dialogTitle="@string/pref_title_sms_store"
-                      android:entries="@array/entries_sms_store"
-                      android:entryValues="@array/entries_sms_store_value" />
-    <ListPreference android:key="pref_key_sms_store_card2"
-                      android:title="@string/pref_title_sms_store_card2"
-                      android:defaultValue="@string/def_sms_store_card2_value"
-                      android:dialogTitle="@string/pref_title_sms_store"
-                      android:entries="@array/entries_sms_store"
-                      android:entryValues="@array/entries_sms_store_value" />
+     <SwitchPreference 
+            android:defaultValue="true"
+            android:key="pref_key_auto_delete"
+            android:summary="@string/pref_summary_auto_delete"
+            android:title="@string/pref_title_auto_delete" />
+            
+    <Preference 
+            android:key="pref_key_sms_delete_limit"
+            android:dependency="pref_key_auto_delete"
+            android:persistent="false"
+            android:summary="@string/pref_summary_delete_limit"
+            android:title="@string/pref_title_sms_delete" />
+            
+    <Preference 
+            android:key="pref_key_mms_delete_limit"
+            android:dependency="pref_key_auto_delete"
+            android:persistent="false"
+            android:summary="@string/pref_summary_delete_limit"
+            android:title="@string/pref_title_mms_delete" />
+            
+    <ListPreference 
+            android:key="pref_key_sms_store"
+            android:title="@string/pref_title_sms_store"
+            android:defaultValue="@string/def_sms_store_value"
+            android:dialogTitle="@string/pref_title_sms_store"
+            android:entries="@array/entries_sms_store"
+            android:entryValues="@array/entries_sms_store_value" />
+            
+    <ListPreference 
+            android:key="pref_key_sms_store_card1"
+            android:title="@string/pref_title_sms_store_card1"
+            android:defaultValue="@string/def_sms_store_card1_value"
+            android:dialogTitle="@string/pref_title_sms_store"
+            android:entries="@array/entries_sms_store"
+            android:entryValues="@array/entries_sms_store_value" />
+            
+    <ListPreference 
+            android:key="pref_key_sms_store_card2"
+            android:title="@string/pref_title_sms_store_card2"
+            android:defaultValue="@string/def_sms_store_card2_value"
+            android:dialogTitle="@string/pref_title_sms_store"
+            android:entries="@array/entries_sms_store"
+            android:entryValues="@array/entries_sms_store_value" />
+            
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/pref_sms_settings_title"
                       android:key="pref_key_sms_settings" >
-    <ListPreference   android:key="pref_key_send_delay"
-                      android:persistent="true"
-                      android:dialogTitle="@string/pref_title_send_delay"
-                      android:title="@string/pref_title_send_delay"
-                      android:entries="@array/send_delay_duration_entries"
-                      android:entryValues="@array/send_delay_duration_values"
-                      android:defaultValue="0"/>
-    <SwitchPreference android:defaultValue="@bool/def_sms_delivery_reports"
-                      android:key="pref_key_sms_delivery_reports"
-                      android:summary="@string/pref_summary_sms_delivery_reports"
-                      android:title="@string/pref_title_sms_delivery_reports" />
-    <SwitchPreference android:defaultValue="@bool/def_sms_delivery_reports_slot1"
-                      android:key="pref_key_sms_delivery_reports_slot1"
-                      android:summary="@string/pref_summary_sms_delivery_reports"
-                      android:title="@string/pref_title_sms_delivery_reports_slot1" />
-    <SwitchPreference android:defaultValue="@bool/def_sms_delivery_reports_slot2"
-                      android:key="pref_key_sms_delivery_reports_slot2"
-                      android:summary="@string/pref_summary_sms_delivery_reports"
-                      android:title="@string/pref_title_sms_delivery_reports_slot2" />
-    <Preference android:key="pref_key_message_template"
-                      android:title="@string/pref_title_message_template" />
-    <Preference android:key="pref_key_manage_sim_messages"
-                      android:title="@string/pref_title_manage_sim_messages" />
-    <Preference android:key="pref_key_manage_sim_messages_slot1"
-                      android:title="@string/pref_title_manage_sim_messages_slot1" />
-    <Preference android:key="pref_key_manage_sim_messages_slot2"
-                      android:title="@string/pref_title_manage_sim_messages_slot2" />
-    <Preference android:key="pref_key_manage_sdcard_messages"
-                      android:title="@string/manage_sdcard_messages" />
+    <ListPreference   
+            android:key="pref_key_send_delay"
+            android:persistent="true"
+            android:dialogTitle="@string/pref_title_send_delay"
+            android:title="@string/pref_title_send_delay"
+            android:entries="@array/send_delay_duration_entries"
+            android:entryValues="@array/send_delay_duration_values"
+            android:defaultValue="0"/>
+            
+    <SwitchPreference 
+            android:defaultValue="@bool/def_sms_delivery_reports"
+            android:key="pref_key_sms_delivery_reports"
+            android:summary="@string/pref_summary_sms_delivery_reports"
+            android:title="@string/pref_title_sms_delivery_reports" />
+            
+    <SwitchPreference 
+            android:defaultValue="@bool/def_sms_delivery_reports_slot1"
+            android:key="pref_key_sms_delivery_reports_slot1"
+            android:summary="@string/pref_summary_sms_delivery_reports"
+            android:title="@string/pref_title_sms_delivery_reports_slot1" />
+            
+    <SwitchPreference 
+            android:defaultValue="@bool/def_sms_delivery_reports_slot2"
+            android:key="pref_key_sms_delivery_reports_slot2"
+            android:summary="@string/pref_summary_sms_delivery_reports"
+            android:title="@string/pref_title_sms_delivery_reports_slot2" />
+            
+    <Preference 
+            android:key="pref_key_message_template"
+            android:title="@string/pref_title_message_template" />
+            
+    <Preference 
+            android:key="pref_key_manage_sim_messages"
+            android:title="@string/pref_title_manage_sim_messages" />
+            
+    <Preference 
+            android:key="pref_key_manage_sim_messages_slot1"
+            android:title="@string/pref_title_manage_sim_messages_slot1" />
+            
+    <Preference 
+            android:key="pref_key_manage_sim_messages_slot2"
+            android:title="@string/pref_title_manage_sim_messages_slot2" />
+            
+    <Preference 
+            android:key="pref_key_manage_sdcard_messages"
+            android:title="@string/manage_sdcard_messages" />
+            
     <ListPreference
-        android:defaultValue="-1"
-        android:dialogTitle="@string/pref_title_validity_period"
-        android:entries="@array/entries_sms_validity_period"
-        android:entryValues="@array/entries_sms_validity_period_value"
-        android:key="pref_key_sms_validity_period"
-        android:title="@string/pref_title_validity_period" />
+            android:defaultValue="-1"
+            android:dialogTitle="@string/pref_title_validity_period"
+            android:entries="@array/entries_sms_validity_period"
+            android:entryValues="@array/entries_sms_validity_period_value"
+            android:key="pref_key_sms_validity_period"
+            android:title="@string/pref_title_validity_period" />
+            
     <ListPreference
-        android:defaultValue="-1"
-        android:dialogTitle="@string/pref_title_validity_period"
-        android:entries="@array/entries_sms_validity_period"
-        android:entryValues="@array/entries_sms_validity_period_value"
-        android:key="pref_key_sms_validity_period_slot1"
-        android:title="@string/pref_title_validity_period_slot1" />
+            android:defaultValue="-1"
+            android:dialogTitle="@string/pref_title_validity_period"
+            android:entries="@array/entries_sms_validity_period"
+            android:entryValues="@array/entries_sms_validity_period_value"
+            android:key="pref_key_sms_validity_period_slot1"
+            android:title="@string/pref_title_validity_period_slot1" />
+            
     <ListPreference
-        android:defaultValue="-1"
-        android:dialogTitle="@string/pref_title_validity_period"
-        android:entries="@array/entries_sms_validity_period"
-        android:entryValues="@array/entries_sms_validity_period_value"
-        android:key="pref_key_sms_validity_period_slot2"
-        android:title="@string/pref_title_validity_period_slot2" />
+            android:defaultValue="-1"
+            android:dialogTitle="@string/pref_title_validity_period"
+            android:entries="@array/entries_sms_validity_period"
+            android:entryValues="@array/entries_sms_validity_period_value"
+            android:key="pref_key_sms_validity_period_slot2"
+            android:title="@string/pref_title_validity_period_slot2" />
+            
   </PreferenceCategory>
 
   <ListPreference
-        android:key="pref_key_sms_cdma_priority"
-        android:title="@string/pref_title_cdma_priority"
-        android:summary="@string/pref_summary_cdma_priority"
-        android:entries="@array/entries_cdma_priority"
-        android:entryValues="@array/values_cdma_priority"
-        android:defaultValue="@string/default_cdma_priority"
-        android:dialogTitle="@string/pref_title_cdma_priority" />
+            android:key="pref_key_sms_cdma_priority"
+            android:title="@string/pref_title_cdma_priority"
+            android:summary="@string/pref_summary_cdma_priority"
+            android:entries="@array/entries_cdma_priority"
+            android:entryValues="@array/values_cdma_priority"
+            android:defaultValue="@string/default_cdma_priority"
+            android:dialogTitle="@string/pref_title_cdma_priority" />
 
-  <PreferenceCategory android:title="@string/pref_sms_signature_title"
-                      android:key="pref_key_sms_signature" >
-    <SwitchPreference android:key="pref_key_enable_signature"
-                      android:title="@string/pref_title_enable_signature" />
-    <EditTextPreference android:key="pref_key_edit_signature"
-                      android:title="@string/pref_title_edit_signature"
-                      android:maxLength="64"/>
+    <PreferenceCategory 
+            android:title="@string/pref_sms_signature_title"
+            android:key="pref_key_sms_signature" >
+            
+    <SwitchPreference 
+            android:key="pref_key_enable_signature"
+            android:title="@string/pref_title_enable_signature" />
+            
+    <EditTextPreference 
+            android:key="pref_key_edit_signature"
+            android:title="@string/pref_title_edit_signature"
+            android:maxLength="64"/>
   </PreferenceCategory>
 
   <PreferenceCategory android:title="@string/pref_mms_settings_title"
                       android:key="pref_key_mms_settings">
-    <SwitchPreference android:defaultValue="true"
-                      android:key="pref_key_mms_group_mms"
-                      android:summary="@string/pref_summary_mms_group_mms"
-                      android:title="@string/pref_title_mms_group_mms" />
-    <SwitchPreference android:defaultValue="@bool/def_mms_delivery_reports"
-                      android:key="pref_key_mms_delivery_reports"
-                      android:summary="@string/pref_summary_mms_delivery_reports"
-                      android:title="@string/pref_title_mms_delivery_reports" />
-    <SwitchPreference android:defaultValue="false"
-                      android:key="pref_key_mms_read_reports"
-                      android:summary="@string/pref_summary_mms_read_reports"
-                      android:title="@string/pref_title_mms_read_reports" />
-    <SwitchPreference android:defaultValue="@bool/def_sms_auto_retrieval"
-                      android:key="pref_key_mms_auto_retrieval"
-                      android:title="@string/pref_title_mms_auto_retrieval"
-                      android:summary="@string/pref_summary_mms_auto_retrieval" />
-    <SwitchPreference android:layout="?android:attr/preferenceLayoutChild"
-                        android:dependency="pref_key_mms_auto_retrieval"
-                        android:defaultValue="false"
-                        android:key="pref_key_mms_retrieval_during_roaming"
-                        android:title="@string/pref_title_mms_retrieval_during_roaming"
-                        android:summary="@string/pref_summary_mms_retrieval_during_roaming" />
-    <ListPreference android:key="pref_key_mms_expiry"
-                    android:title="@string/pref_title_validity_period"
-                    android:dialogTitle="@string/pref_title_validity_period"
-                    android:entries="@array/save_time"
-                    android:entryValues="@array/save_time_values"
-                    android:defaultValue="0" />
-    <ListPreference android:key="pref_key_mms_expiry_slot1"
-                    android:title="@string/pref_title_validity_period_slot1"
-                    android:dialogTitle="@string/pref_title_validity_period"
-                    android:entries="@array/save_time"
-                    android:entryValues="@array/save_time_values"
-                    android:defaultValue="0" />
-    <ListPreference android:key="pref_key_mms_expiry_slot2"
-                    android:title="@string/pref_title_validity_period_slot2"
-                    android:dialogTitle="@string/pref_title_validity_period"
-                    android:entries="@array/save_time"
-                    android:entryValues="@array/save_time_values"
-                    android:defaultValue="0" />
+    <SwitchPreference 
+            android:defaultValue="true"
+            android:key="pref_key_mms_group_mms"
+            android:summary="@string/pref_summary_mms_group_mms"
+            android:title="@string/pref_title_mms_group_mms" />
+            
+    <SwitchPreference 
+            android:defaultValue="@bool/def_mms_delivery_reports"
+            android:key="pref_key_mms_delivery_reports"
+            android:summary="@string/pref_summary_mms_delivery_reports"
+            android:title="@string/pref_title_mms_delivery_reports" />
+            
+    <SwitchPreference 
+            android:defaultValue="false"
+            android:key="pref_key_mms_read_reports"
+            android:summary="@string/pref_summary_mms_read_reports"
+            android:title="@string/pref_title_mms_read_reports" />
+            
+    <SwitchPreference 
+            android:defaultValue="@bool/def_sms_auto_retrieval"
+            android:key="pref_key_mms_auto_retrieval"
+            android:title="@string/pref_title_mms_auto_retrieval"
+            android:summary="@string/pref_summary_mms_auto_retrieval" />
+            
+    <SwitchPreference 
+            android:layout="?android:attr/preferenceLayoutChild"
+            android:dependency="pref_key_mms_auto_retrieval"
+            android:defaultValue="false"
+            android:key="pref_key_mms_retrieval_during_roaming"
+            android:title="@string/pref_title_mms_retrieval_during_roaming"
+            android:summary="@string/pref_summary_mms_retrieval_during_roaming" />
+            
+    <ListPreference 
+            android:key="pref_key_mms_expiry"
+            android:title="@string/pref_title_validity_period"
+            android:dialogTitle="@string/pref_title_validity_period"
+            android:entries="@array/save_time"
+            android:entryValues="@array/save_time_values"
+            android:defaultValue="0" />
+            
+    <ListPreference 
+            android:key="pref_key_mms_expiry_slot1"
+            android:title="@string/pref_title_validity_period_slot1"
+            android:dialogTitle="@string/pref_title_validity_period"
+            android:entries="@array/save_time"
+            android:entryValues="@array/save_time_values"
+            android:defaultValue="0" />
+            
+    <ListPreference 
+            android:key="pref_key_mms_expiry_slot2"
+            android:title="@string/pref_title_validity_period_slot2"
+            android:dialogTitle="@string/pref_title_validity_period"
+            android:entries="@array/save_time"
+            android:entryValues="@array/save_time_values"
+            android:defaultValue="0" />
   </PreferenceCategory>
+  
   <PreferenceCategory android:title="@string/pref_notification_settings_title"
                       android:key="pref_key_notification_settings">
-    <SwitchPreference android:key="pref_key_enable_notifications"
-                        android:title="@string/pref_title_notification_enabled"
-                        android:defaultValue="true" />
-    <RingtonePreference android:key="pref_key_ringtone"
-                        android:title="@string/pref_title_notification_ringtone"
-                        android:ringtoneType="notification"
-                        android:dependency="pref_key_enable_notifications"
-                        android:defaultValue="content://settings/system/notification_sound" />
-    <SwitchPreference android:key="pref_key_vibrate"
-                        android:title="@string/pref_title_notification_vibrateWhen"
-                        android:dependency="pref_key_enable_notifications"
-                        android:defaultValue="false" />
-    <ListPreference   android:key="pref_key_mms_notification_vibrate_pattern"
-                        android:dependency="pref_key_vibrate"
-                        android:defaultValue=""
-                        android:title="@string/pref_title_mms_notification_vibrate_pattern"
-                        android:summary="@string/pref_summary_mms_notification_vibrate_pattern"
-                        android:entries="@array/pref_mms_notification_vibrate_pattern_entries"
-                        android:entryValues="@array/pref_mms_notification_vibrate_pattern_values"
-                        android:dialogTitle="@string/pref_title_mms_notification_vibrate_pattern" />
+    <SwitchPreference 
+            android:key="pref_key_enable_notifications"
+            android:title="@string/pref_title_notification_enabled"
+            android:defaultValue="true" />
+
+    <RingtonePreference 
+            android:key="pref_key_ringtone"
+            android:title="@string/pref_title_notification_ringtone"
+            android:ringtoneType="notification"
+            android:dependency="pref_key_enable_notifications"
+            android:defaultValue="content://settings/system/notification_sound" />
+
+    <SwitchPreference 
+            android:key="pref_key_vibrate"
+            android:title="@string/pref_title_notification_vibrateWhen"
+            android:dependency="pref_key_enable_notifications"
+            android:defaultValue="false" />
+
+    <ListPreference   
+            android:key="pref_key_mms_notification_vibrate_pattern"
+            android:dependency="pref_key_vibrate"
+            android:defaultValue=""
+            android:title="@string/pref_title_mms_notification_vibrate_pattern"
+            android:summary="@string/pref_summary_mms_notification_vibrate_pattern"
+            android:entries="@array/pref_mms_notification_vibrate_pattern_entries"
+            android:entryValues="@array/pref_mms_notification_vibrate_pattern_values"
+            android:dialogTitle="@string/pref_title_mms_notification_vibrate_pattern" />
   </PreferenceCategory>
+  
   <PreferenceCategory android:title="@string/pref_smsc_title"
                       android:key="pref_key_smsc" >
   </PreferenceCategory>
+  
   <PreferenceCategory android:title="@string/pref_wap_push_title">
-    <SwitchPreference android:key="pref_key_enable_wap_push"
-                        android:title="@string/pref_title_wap_push_enabled"
-                        android:summary="@string/pref_summary_wap_push_enabled"
-                        android:defaultValue="@bool/def_wap_push_enabled" />
+    <SwitchPreference 
+            android:key="pref_key_enable_wap_push"
+            android:title="@string/pref_title_wap_push_enabled"
+            android:summary="@string/pref_summary_wap_push_enabled"
+            android:defaultValue="@bool/def_wap_push_enabled" />
   </PreferenceCategory>
 
   <!-- QuickMessage settings -->
