@@ -391,4 +391,7 @@
     <!-- Heads up mode -->
     <string name="pref_title_notification_heads_up_mode_enabled">Heads up mode</string>
     <string name="pref_summary_notification_heads_up_mode_enabled">Show messages as heads up notification.</string> 
+	
+    <!-- Select recipients dialog -->
+    <string name="adding_selected_recipients_dialog_text">Adding contacts&#8230;</string>
 </resources>
