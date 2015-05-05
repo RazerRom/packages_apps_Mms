@@ -1413,7 +1413,9 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
             MenuInflater inflater = getMenuInflater();
             mSelectedThreadIds = new HashSet<Long>();
             inflater.inflate(R.menu.conversation_multi_select_menu, menu);
-
+            if(mFilterSpinner.getVisibility() == View.VISIBLE){
+                mFilterSpinner.setEnabled(false);
+            }
             return true;
         }
 
@@ -1468,6 +1470,9 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
             ConversationListAdapter adapter = (ConversationListAdapter)getListView().getAdapter();
             adapter.uncheckAll();
             mSelectedThreadIds = null;
+            if(mFilterSpinner.getVisibility() == View.VISIBLE){
+                mFilterSpinner.setEnabled(true);
+            }
         }
 
         @Override
