@@ -18,12 +18,15 @@
 package com.android.mms.ui;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.Spannable;
@@ -45,6 +48,7 @@ import com.android.mms.R;
 import com.android.mms.data.Contact;
 import com.android.mms.data.ContactList;
 import com.android.mms.data.Conversation;
+import com.android.mms.themes.Constants;
 import com.android.mms.util.SmileyParser;
 
 import java.util.Locale;
@@ -67,6 +71,7 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
     private CheckableQuickContactBadge mAvatarView;
 
     static private RoundedBitmapDrawable sDefaultContactImage;
+    private SharedPreferences sp;
 
     // For posting UI update Runnables from other threads:
     private Handler mHandler = new Handler();
@@ -90,6 +95,8 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
             sDefaultContactImage.setCornerRadius(
                     Math.max(defaultImage.getWidth() / 2, defaultImage.getHeight() / 2));
         }
+
+        sp = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -151,15 +158,34 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
             int before = buf.length();
             if (isLayoutRtl && isEnName) {
                 buf.insert(1, mConversation.getMessageCount() + " ");
-                buf.setSpan(new ForegroundColorSpan(
-                        mContext.getResources().getColor(R.color.message_count_color)),
-                        1, buf.length() - before, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            int defaultColor = 0;
+            if (mConversation.hasUnreadMessages()) {
+                defaultColor = sp.getInt(Constants.PREF_UNREAD_COUNT,
+                        mContext.getResources().getColor(R.color.default_unread_count));
+                buf.setSpan(new ForegroundColorSpan(color), before, buf.length(),
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            } else {
+                defaultColor = sp.getInt(Constants.PREF_READ_COUNT,
+                        mContext.getResources().getColor(R.color.default_read_count));
+                buf.setSpan(new ForegroundColorSpan(color), before, buf.length(),
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
             } else {
                 buf.append(mContext.getResources().getString(R.string.message_count_format,
                         mConversation.getMessageCount()));
-                buf.setSpan(new ForegroundColorSpan(
-                        mContext.getResources().getColor(R.color.message_count_color)),
-                        before, buf.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            int defaultColor = 0;
+            if (mConversation.hasUnreadMessages()) {
+                defaultColor = sp.getInt(Constants.PREF_UNREAD_COUNT,
+                        mContext.getResources().getColor(R.color.default_unread_count));
+                buf.setSpan(new ForegroundColorSpan(color), before, buf.length(),
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            } else {
+                defaultColor = sp.getInt(Constants.PREF_READ_COUNT,
+                        mContext.getResources().getColor(R.color.default_read_count));
+                buf.setSpan(new ForegroundColorSpan(color), before, buf.length(),
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+
            }
         }
         if (mConversation.hasDraft()) {
@@ -247,6 +273,8 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
 
         mConversation = conversation;
 
+        updateBackground();
+
         LayoutParams attachmentLayout = (LayoutParams)mAttachmentView.getLayoutParams();
         boolean hasError = conversation.hasError();
         // When there's an error icon, the attachment icon is left of the error icon.
@@ -293,6 +321,42 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
         mAvatarView.setChecked(isChecked(), sameItem);
     }
 
+    private void updateBackground() {
+        Resources res = mContext.getResources();
+        int contactFontSize = sp.getInt(Constants.PREF_CONV_CONTACT_FONT_SIZE, 16);
+        int dateFontSize = sp.getInt(Constants.PREF_CONV_DATE_FONT_SIZE, 16);
+        int textFontSize = sp.getInt(Constants.PREF_CONV_FONT_SIZE, 16);
+        if (mConversation.isChecked()) {
+            int backgroundId = R.drawable.list_selected_holo_light;
+            Drawable background = mContext.getResources().getDrawable(backgroundId);
+            setBackground(background);
+        } else if (mConversation.hasUnreadMessages()) {
+            setBackgroundColor(sp.getInt(Constants.PREF_UNREAD_BG, res.getColor(
+                    R.color.default_unread_bg)));
+            mFromView.setTextColor(sp.getInt(Constants.PREF_UNREAD_CONTACT, res.getColor(
+                    R.color.default_unread_contact)));
+            mFromView.setTextSize(contactFontSize);
+            mSubjectView.setTextColor(sp.getInt(Constants.PREF_UNREAD_SUBJECT, res.getColor(
+                    R.color.default_unread_subject)));
+            mSubjectView.setTextSize(textFontSize);
+            mDateView.setTextColor(sp.getInt(Constants.PREF_UNREAD_DATE, res.getColor(
+                    R.color.default_unread_date)));
+            mDateView.setTextSize(dateFontSize);
+        } else {
+            setBackgroundColor(sp.getInt(Constants.PREF_READ_BG, res.getColor(
+                    R.color.default_read_bg)));
+            mFromView.setTextColor(sp.getInt(Constants.PREF_READ_CONTACT, res.getColor(
+                    R.color.default_read_contact)));
+            mFromView.setTextSize(contactFontSize);
+            mSubjectView.setTextColor(sp.getInt(Constants.PREF_READ_SUBJECT, res.getColor(
+                    R.color.default_read_subject)));
+            mSubjectView.setTextSize(textFontSize);
+            mDateView.setTextColor(sp.getInt(Constants.PREF_READ_DATE, res.getColor(
+                    R.color.default_read_date)));
+            mDateView.setTextSize(dateFontSize);
+        }
+    }
+
     public final void unbind() {
         if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
             Log.v(TAG, "unbind: contacts.removeListeners " + this);
@@ -306,6 +370,7 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
         mConversation.setIsChecked(checked);
         mAvatarView.setChecked(isChecked(), true);
         setActivated(checked);
+        updateBackground();
     }
 
     @Override

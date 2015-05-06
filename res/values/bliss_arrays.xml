@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2013-2014 The CyanogenMod Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Themes Arrays -->
+    <!-- Layout styles values -->
+    <string-array name="text_conv_layout_styles">
+        <item>@string/layout_default</item>
+        <item>@string/layout_from_left</item>
+        <item>@string/layout_from_right</item>
+    </string-array>
+
+    <string-array name="text_conv_layout_values" translatable="false">
+        <item>default</item>
+        <item>layoutLeft</item>
+        <item>layoutRight</item>
+    </string-array>
+
+    <!-- Bubble styles -->
+    <string-array name="text_bubble_styles">
+        <item>@string/bubble_none</item>
+        <item>@string/bubble</item>
+        <item>@string/circle</item>
+        <item>@string/circle_holo</item>
+        <item>@string/rect</item>
+        <item>@string/rect_holo</item>
+        <!-- <item>@string/frame</item>
+        <item>@string/frame_holo</item>
+        <item>@string/frame2</item> -->
+    </string-array>
+
+    <string-array name="text_bubble_values" translatable="false">
+        <item>bubble_none</item>
+        <item>bubble</item>
+        <item>circle</item>
+        <item>circle_holo</item>
+        <item>rect</item>
+        <item>rect_holo</item>
+        <!-- <item>frame</item>
+        <item>frame_holo</item>
+        <item>frame2</item> -->
+    </string-array>
+
+    <!-- widget styles -->
+    <string-array name="widget_layout_styles">
+        <item>@string/widget_layout_dark</item>
+        <item>@string/widget_layout_light</item>
+    </string-array>
+
+    <string-array name="widget_layout_values" translatable="false">
+        <item>**dark**</item>
+        <item>**light**</item>
+    </string-array>
+
+</resources>

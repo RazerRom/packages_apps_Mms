@@ -1120,7 +1120,7 @@ public class MessagingNotification {
         NotificationInfo mostRecentNotification = notificationSet.first();
 
         final NotificationCompat.Builder noti = new NotificationCompat.Builder(context)
-                .setWhen(mostRecentNotification.mTimeMillis);
+                .setWhen(mostRecentNotification.mTimeMillis).setAutoCancel(true);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         boolean isHeadsUp = sp.getBoolean(MessagingPreferenceActivity.HEADS_UP_MODE_ENABLED, true);

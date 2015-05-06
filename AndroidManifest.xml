@@ -39,6 +39,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INSTALL_DRM" />
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.CHANGE_PHONE_BLACKLIST" />
     <uses-permission android:name="android.permission.READ_PHONE_BLACKLIST" />
 
@@ -446,6 +447,17 @@
         <service android:name=".widget.MmsWidgetService"
                  android:permission="android.permission.BIND_REMOTEVIEWS"
                  android:exported="false" />
+
+        <activity
+            android:name=".themes.ThemesConversationList"
+            android:theme="@style/MmsTheme"
+            android:label="@string/themes_conv_list_title" >
+        </activity>
+        <activity
+            android:name=".themes.ThemesMessageList"
+            android:theme="@style/MmsTheme"
+            android:label="@string/themes_msg_list_title" >
+        </activity>
 
         <!-- QuickMessage support -->
         <!-- This is the "QuickMessage" panel, which has special

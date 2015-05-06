@@ -75,8 +75,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SqliteWrapper;
 import android.drm.DrmStore;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -118,27 +126,27 @@ import android.util.TypedValue;
 import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
 import android.view.ViewStub;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
+import android.widget.*;
+import android.widget.ImageView.ScaleType;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.android.contacts.common.util.MaterialColorMapUtils;
 import com.android.contacts.common.util.MaterialColorMapUtils.MaterialPalette;
@@ -162,6 +170,7 @@ import com.android.mms.data.WorkingMessage.MessageStatusListener;
 import com.android.mms.drm.DrmUtils;
 import com.android.mms.model.SlideModel;
 import com.android.mms.model.SlideshowModel;
+import com.android.mms.themes.Constants;
 import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.transaction.SmsReceiverService;
 import com.android.mms.ui.MessageListView.OnSizeChangedListener;
@@ -335,6 +344,10 @@ public class ComposeMessageActivity extends Activity
         System.out.println("URI " + CONVERSATION_TYPE_URI);
     }
 
+    // Custom background image
+    private static final String CUSTOM_IMAGE_PATH =
+            "/data/data/com.android.mms/files/message_list_image.jpg";
+
     private ContentResolver mContentResolver;
 
     private PickupGestureDetector mPickupDetector;
@@ -414,6 +427,10 @@ public class ComposeMessageActivity extends Activity
     private AsyncDialog mAsyncDialog;   // Used for background tasks.
 
     private String mDebugRecipients;
+
+    // custom background
+    private Bitmap mImageBackground;
+    private File mImageFile;
 
     private boolean mEnableEmoticons;
 
@@ -502,6 +519,10 @@ public class ComposeMessageActivity extends Activity
     private UnicodeFilter mUnicodeFilter = null;
 
     private AddNumbersTask mAddNumbersTask;
+
+    // signature
+    private String mSignature;
+    private SharedPreferences sp;
 
     @SuppressWarnings("unused")
     public static void log(String logMsg) {
@@ -2009,8 +2030,8 @@ public class ComposeMessageActivity extends Activity
 
         resetConfiguration(getResources().getConfiguration());
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String unicodeStripping = prefs.getString(MessagingPreferenceActivity.UNICODE_STRIPPING,
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String unicodeStripping = sp.getString(MessagingPreferenceActivity.UNICODE_STRIPPING,
                 MessagingPreferenceActivity.UNICODE_STRIPPING_LEAVE_INTACT);
 
         if (!TextUtils.equals(unicodeStripping,
@@ -2020,7 +2041,7 @@ public class ComposeMessageActivity extends Activity
             mUnicodeFilter = new UnicodeFilter(stripNonDecodableOnly);
         }
 
-        mEnableEmoticons = prefs.getBoolean(MessagingPreferenceActivity.ENABLE_EMOTICONS, true);
+        mEnableEmoticons = sp.getBoolean(MessagingPreferenceActivity.ENABLE_EMOTICONS, true);
 
         View inflate = getLayoutInflater().inflate(R.layout.compose_message_activity, null);
         mZoomGestureOverlayView = new ZoomGestureOverlayView(this);
@@ -2030,6 +2051,9 @@ public class ComposeMessageActivity extends Activity
         mZoomGestureOverlayView.setGestureVisible(false);
         setContentView(mZoomGestureOverlayView);
         setProgressBarVisibility(false);
+		
+        // Used for custom background file
+        mImageFile = new File(CUSTOM_IMAGE_PATH);
 
         mShowAttachIcon = getResources().getBoolean(R.bool.config_show_attach_icon_always);
 
@@ -2530,6 +2554,18 @@ public class ComposeMessageActivity extends Activity
         mIsRunning = true;
         updateThreadIdIfRunning();
         mConversation.markAsRead(true);
+		
+        // custom background
+        setCustomBackground();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (!hasFocus) {
+            return;
+        }
+        mConversation.markAsRead(true);
     }
 
     @Override
@@ -2622,6 +2658,12 @@ public class ComposeMessageActivity extends Activity
         }
         if (mZoomGestureOverlayView != null) {
             mZoomGestureOverlayView.removeZoomListener(this);
+        }
+
+        // recycle custom background image
+        if (mImageBackground != null) {
+            mImageBackground.recycle();
+            mImageBackground = null;
         }
 
         super.onDestroy();
@@ -4747,6 +4789,13 @@ public class ComposeMessageActivity extends Activity
             // them back once the recipient list has settled.
             removeRecipientsListeners();
 
+            // add signature if set.
+            mSignature = sp.getString(Constants.PREF_SIGNATURE, "");
+            if (!mSignature.isEmpty()) {
+                mSignature = "\n" + mSignature;
+                mWorkingMessage.setText(mWorkingMessage.getText() + mSignature);
+            }
+
             // strip unicode chars before sending (if applicable)
             mWorkingMessage.setText(stripUnicodeIfRequested(mWorkingMessage.getText()));
 
@@ -5356,6 +5405,25 @@ public class ComposeMessageActivity extends Activity
             }
 
             MmsWidgetProvider.notifyDatasetChanged(getApplicationContext());
+        }
+    }
+
+    private void setCustomBackground() {
+        // Set where this background goes first
+        LinearLayout msgBackground = (LinearLayout) findViewById(R.id.msg_list_bg);
+
+        int dColor = getResources().getColor(R.color.default_message_background);
+
+        // Message listview custom background
+        if (mImageFile.exists()) {
+            mImageBackground = BitmapFactory.decodeFile(CUSTOM_IMAGE_PATH);
+            Drawable d = new BitmapDrawable(getResources(), mImageBackground);
+            d.setColorFilter(sp.getInt(
+                    Constants.PREF_MESSAGE_BG, dColor), PorterDuff.Mode.SRC_ATOP);
+            msgBackground.setBackgroundDrawable(d);
+        } else {
+            // Message listview background color
+            msgBackground.setBackgroundColor(sp.getInt(Constants.PREF_MESSAGE_BG, dColor));
         }
     }
 

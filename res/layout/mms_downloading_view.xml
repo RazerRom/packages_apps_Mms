@@ -39,9 +39,10 @@
 
     <TextView android:id="@+id/label_downloading"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center"
         android:text="@string/downloading" 
         android:visibility="gone" />
 

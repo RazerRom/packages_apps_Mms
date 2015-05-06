@@ -36,10 +36,20 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SqliteWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -60,18 +70,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnKeyListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
+import android.widget.*;
+import android.widget.ImageView.ScaleType;
 
 import com.android.mms.LogTag;
 import com.android.mms.MmsConfig;
@@ -81,6 +86,7 @@ import com.android.mms.data.ContactList;
 import com.android.mms.data.Conversation;
 import com.android.mms.data.Conversation.ConversationQueryHandler;
 import com.android.mms.data.RecipientIdCache;
+import com.android.mms.themes.Constants;
 import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.transaction.SmsRejectedReceiver;
 import com.android.mms.util.DraftCache;
@@ -88,6 +94,7 @@ import com.android.mms.util.Recycler;
 import com.android.mms.widget.MmsWidgetProvider;
 import com.google.android.mms.pdu.PduHeaders;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -97,6 +104,8 @@ import java.util.HashSet;
  */
 public class ConversationList extends ListActivity implements DraftCache.OnDraftChangedListener {
     private static final String TAG = LogTag.TAG;
+    private static final String CUSTOM_IMAGE_PATH =
+                "/data/data/com.android.mms/files/conversation_list_image.jpg";
     private static final boolean DEBUG = false;
     private static final boolean DEBUGCLEANUP = true;
 
@@ -156,7 +165,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
     private ThreadListQueryHandler mQueryHandler;
     private ConversationListAdapter mListAdapter;
-    private SharedPreferences mPrefs;
+    private SharedPreferences sp;
     private Handler mHandler;
     private boolean mDoOnceAfterFirstQuery;
     private TextView mUnreadConvCount;
@@ -172,6 +181,9 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
     // keys for extras and icicles
     private final static String LAST_LIST_POS = "last_list_pos";
     private final static String LAST_LIST_OFFSET = "last_list_offset";
+
+    // image background
+    private Bitmap mImageBackground;
 
     static private final String CHECKED_MESSAGE_LIMITS = "checked_message_limits";
     private final static int DELAY_TIME = 500;
@@ -211,6 +223,8 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
             finish();
             return;
         }
+		
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         mSmsPromoBannerView = findViewById(R.id.banner_sms_promo);
 
@@ -225,6 +239,9 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         // Tell the list view which view to display when the list is empty
         listView.setEmptyView(findViewById(R.id.empty));
 
+        // set custom background
+        setCustomBackground();
+
         initListAdapter();
 
         setupActionBar();
@@ -234,8 +251,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         setTitle(R.string.app_label);
 
         mHandler = new Handler();
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean checkedMessageLimits = mPrefs.getBoolean(CHECKED_MESSAGE_LIMITS, false);
+        boolean checkedMessageLimits = sp.getBoolean(CHECKED_MESSAGE_LIMITS, false);
         if (DEBUG) Log.v(TAG, "checkedMessageLimits: " + checkedMessageLimits);
         if (!checkedMessageLimits) {
             runOneTimeStorageLimitCheckForLegacyMessages();
@@ -262,6 +278,9 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
         outState.putInt(LAST_LIST_POS, mSavedFirstVisiblePosition);
         outState.putInt(LAST_LIST_OFFSET, mSavedFirstItemOffset);
+
+        // set custom background
+        setCustomBackground();
     }
 
     @Override
@@ -297,6 +316,8 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         } else {
             listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
         }
+        // set custom background
+        setCustomBackground();
 
         // Show or hide the SMS promo banner
         if (mIsSmsEnabled || MmsConfig.isSmsPromoDismissed(this)) {
@@ -464,7 +485,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            SharedPreferences.Editor editor = mPrefs.edit();
+                            SharedPreferences.Editor editor = sp.edit();
                             editor.putBoolean(MessagingPreferenceActivity.AUTO_DELETE, true);
                             editor.apply();
                         }
@@ -487,7 +508,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
      */
     private void markCheckedMessageLimit() {
         if (DEBUG) Log.v(TAG, "markCheckedMessageLimit");
-        SharedPreferences.Editor editor = mPrefs.edit();
+        SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(CHECKED_MESSAGE_LIMITS, true);
         editor.apply();
     }
@@ -998,8 +1019,28 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
             .show();
     }
 
+    private void setCustomBackground() {
+        // Set where this background goes first
+        RelativeLayout convBackground = (RelativeLayout) findViewById(R.id.conv_list_screen);
+        File file = new File(CUSTOM_IMAGE_PATH);
 
- /**
+        int dColor = this.getResources().getColor(R.color.default_conv_list_background);
+
+        if (file.exists()) {
+            // Conversation listview custom background
+            mImageBackground = BitmapFactory.decodeFile(CUSTOM_IMAGE_PATH);
+            Drawable d = new BitmapDrawable(this.getResources(), mImageBackground);
+            d.setColorFilter(sp.getInt(
+                    Constants.CONVERSATION_LIST_BACKGROUND, dColor), PorterDuff.Mode.SRC_ATOP);
+            convBackground.setBackgroundDrawable(d);
+        } else {
+            // Conversation listview background color
+            convBackground.setBackgroundColor(sp.getInt(
+                    Constants.CONVERSATION_LIST_BACKGROUND, dColor));
+        }
+    }
+
+    /**
      * Build and show the proper mark as unread thread dialog. The UI is slightly different
      * depending on whether we're deleting single/multiple threads or all threads.
      * @param listener gets called when the delete button is pressed

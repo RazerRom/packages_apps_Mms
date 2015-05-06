@@ -41,6 +41,32 @@
             android:targetPackage="com.android.settings">
         </intent>
     </Preference>
+    <PreferenceCategory
+        android:title="@string/mms_themes"
+        android:key="pref_mms_themes">
+
+        <Preference
+			android:title="@string/themes_conv_list_title"
+			android:summary="@string/themes_conv_list_summary"
+			android:key="pref_themes_conversation_list">
+			  <intent
+			      android:action="android.intent.action.MAIN"
+			      android:targetClass="com.android.mms.themes.ThemesConversationList"
+			      android:targetPackage="com.android.mms" />
+		</Preference>
+
+	    <Preference	
+		    android:title="@string/themes_msg_list_title"
+		    android:summary="@string/themes_msg_list_summary"
+		    android:key="pref_themes_message_list">
+		       <intent
+		           android:action="android.intent.action.MAIN"
+		           android:targetClass="com.android.mms.themes.ThemesMessageList"
+		           android:targetPackage="com.android.mms" />
+		</Preference>
+
+    </PreferenceCategory>
+    
     <PreferenceCategory android:title="@string/pref_sms_storage_title"
                       android:key="pref_key_storage_settings">
 <!--
@@ -96,8 +122,11 @@
             android:entryValues="@array/entries_sms_store_value" />
             
   </PreferenceCategory>
-  <PreferenceCategory android:title="@string/pref_sms_settings_title"
-                      android:key="pref_key_sms_settings" >
+  
+  <PreferenceCategory 
+        android:title="@string/pref_sms_settings_title"
+        android:key="pref_key_sms_settings" >
+
     <ListPreference   
             android:key="pref_key_send_delay"
             android:persistent="true"
@@ -232,10 +261,11 @@
             android:title="@string/pref_title_mms_retrieval_during_roaming"
             android:summary="@string/pref_summary_mms_retrieval_during_roaming" />
 
-    <SwitchPreference android:defaultValue="@bool/enable_data_for_mms"
-                      android:key="pref_key_mms_auto_enable_data"
-                      android:title="@string/pref_title_mms_auto_enable_data"
-                      android:summary="@string/pref_summary_mms_auto_enable_data" />
+    <SwitchPreference 
+            android:defaultValue="@bool/enable_data_for_mms"
+            android:key="pref_key_mms_auto_enable_data"
+            android:title="@string/pref_title_mms_auto_enable_data"
+            android:summary="@string/pref_summary_mms_auto_enable_data" />
 
     <ListPreference
             android:key="pref_key_mms_expiry"

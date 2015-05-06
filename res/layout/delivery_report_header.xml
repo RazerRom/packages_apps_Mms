@@ -21,22 +21,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:background="#ff888888"
+    android:background="@color/darkgray_backgrounds"
     android:layout_height="?android:attr/listPreferredItemHeight">
 
     <ImageView android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dip"
+        android:layout_marginLeft="5dip"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_sms_mms_details" />
 
     <TextView android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dip"
+        android:layout_marginLeft="5dip"
         android:layout_gravity="center_vertical"
-        android:textColor="#ffffffff"
+        android:textColor="@color/delivery_report_header"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:singleLine="true"
         android:text="@string/delivery_header_title" />

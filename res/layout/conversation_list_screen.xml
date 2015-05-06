@@ -49,6 +49,7 @@
     <include layout="@layout/banner_sms_promo" />
 
     <RelativeLayout
+        android:id="@+id/conv_list_screen"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
@@ -61,14 +62,14 @@
             android:dividerHeight="0dp"
             android:drawSelectorOnTop="false"
             android:scrollbarStyle="insideOverlay"
-            android:background="@color/background"
+            android:background="@color/transparent"
+            android:cacheColorHint="@color/transparent"
             android:fadingEdgeLength="16dip" />
 
         <TextView android:id="@+id/empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="@color/background"
             android:text="@string/loading_conversations"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
