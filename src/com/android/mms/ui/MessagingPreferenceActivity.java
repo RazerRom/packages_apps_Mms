@@ -617,8 +617,8 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     }
 
     private boolean isAirPlaneModeOn() {
-        return Settings.System.getInt(getContentResolver(),
-                Settings.System.AIRPLANE_MODE_ON, 0) != 0;
+        return Settings.Global.getInt(getContentResolver(),
+                Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
     }
 
     private String getSMSCDialogTitle(int count, int index) {
