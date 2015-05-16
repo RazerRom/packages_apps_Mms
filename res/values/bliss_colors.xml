@@ -51,8 +51,7 @@
     <color name="dividers">#ff202020</color>
     <color name="transparent">#00000000</color>
     <color name="semi_transparent">#6f000000</color>
-    <!-- <color name="compose_bg">#ffffffff</color> -->
-    <color name="compose_bg">#00000000</color>
+    <color name="compose_bg">#ffffffff</color>
 
     <!-- Quick messaging colors -->
     <color name="qm_light_text">#ff101010</color>
