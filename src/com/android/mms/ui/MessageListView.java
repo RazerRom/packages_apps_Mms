@@ -20,12 +20,9 @@ import android.content.Context;
 import android.text.ClipboardManager;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.ListView;
-import com.android.mms.ui.zoom.ZoomMessageListItem;
-import com.android.mms.ui.zoom.ZoomMessageListView;
 
-public final class MessageListView extends ZoomMessageListView {
+public final class MessageListView extends ListView {
     private OnSizeChangedListener mOnSizeChangedListener;
 
     public MessageListView(Context context) {
@@ -84,6 +81,5 @@ public final class MessageListView extends ZoomMessageListView {
         }
         return INVALID_POSITION;
     }
-
 }
 

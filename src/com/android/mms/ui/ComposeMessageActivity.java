@@ -175,9 +175,6 @@ import com.android.mms.transaction.SmsReceiverService;
 import com.android.mms.ui.MessageListView.OnSizeChangedListener;
 import com.android.mms.ui.MessageUtils.ResizeImageResultCallback;
 import com.android.mms.ui.RecipientsEditor.RecipientContextMenuInfo;
-import com.android.mms.ui.zoom.ZoomGestureOverlayView;
-import com.android.mms.ui.zoom.ZoomGestureOverlayView.IZoomListener;
-import com.android.mms.ui.zoom.ZoomMessageListItem;
 import com.android.mms.util.DraftCache;
 import com.android.mms.util.IntentUtils;
 import com.android.mms.util.PhoneNumberFormatter;
@@ -208,7 +205,7 @@ import com.google.android.mms.pdu.SendReq;
  */
 public class ComposeMessageActivity extends Activity
         implements View.OnClickListener, TextView.OnEditorActionListener,
-        MessageStatusListener, Contact.UpdateListener, IZoomListener,
+        MessageStatusListener, Contact.UpdateListener,
         PickupGestureDetector.PickupListener {
     public static final int REQUEST_CODE_ATTACH_IMAGE                   = 100;
     public static final int REQUEST_CODE_TAKE_PICTURE                   = 101;
@@ -380,7 +377,6 @@ public class ComposeMessageActivity extends Activity
     private ImageButton mSendButtonSmsViewSec; // The second sms send button without sim indicator
     private ImageView mIndicatorForSimMmsFir, mIndicatorForSimSmsFir;
     private ImageView mIndicatorForSimMmsSec, mIndicatorForSimSmsSec;
-    private ZoomGestureOverlayView mZoomGestureOverlayView; // overlay for handling zoom
 
     private AttachmentEditor mAttachmentEditor;
     private View mAttachmentEditorScrollView;
@@ -2041,13 +2037,7 @@ public class ComposeMessageActivity extends Activity
 
         mEnableEmoticons = sp.getBoolean(MessagingPreferenceActivity.ENABLE_EMOTICONS, true);
 
-        View inflate = getLayoutInflater().inflate(R.layout.compose_message_activity, null);
-        mZoomGestureOverlayView = new ZoomGestureOverlayView(this);
-        mZoomGestureOverlayView.addZoomListener(this);
-        mZoomGestureOverlayView.addView(inflate);
-        mZoomGestureOverlayView.setEventsInterceptionEnabled(true);
-        mZoomGestureOverlayView.setGestureVisible(false);
-        setContentView(mZoomGestureOverlayView);
+        setContentView(R.layout.compose_message_activity);
         setProgressBarVisibility(false);
 		
         // Used for custom background file
@@ -2070,16 +2060,6 @@ public class ComposeMessageActivity extends Activity
 
         if (TRACE) {
             android.os.Debug.startMethodTracing("compose");
-        }
-    }
-
-    @Override
-    public void onZoomWithScale(float scale) {
-        if (mMsgListView != null) {
-            mMsgListView.handleZoomWithScale(scale);
-        }
-        if (mTextEditor != null) {
-            ZoomMessageListItem.zoomViewByScale(this, mTextEditor, scale);
         }
     }
 
@@ -2652,9 +2632,6 @@ public class ComposeMessageActivity extends Activity
     protected void onDestroy() {
         if (TRACE) {
             android.os.Debug.stopMethodTracing();
-        }
-        if (mZoomGestureOverlayView != null) {
-            mZoomGestureOverlayView.removeZoomListener(this);
         }
 
         // recycle custom background image
