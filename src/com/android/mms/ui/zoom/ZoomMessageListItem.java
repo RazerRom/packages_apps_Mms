@@ -22,14 +22,12 @@ import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.android.mms.ui.MessageListItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * ZoomMessageListItem
@@ -46,7 +44,8 @@ public class ZoomMessageListItem extends LinearLayout {
 
     // Members
     private final List<TextView> mZoomableTextViewList = new ArrayList<TextView>();
-    private final Map<TextView, Float> mOriginalTextSizes = new HashMap<>();
+
+    protected int mZoomFontSize = ZoomMessageListView.MIN_FONT_SIZE;
 
     /**
      * Constructor
@@ -78,8 +77,9 @@ public class ZoomMessageListItem extends LinearLayout {
         }
         if (!mZoomableTextViewList.contains(textView)) {
             mZoomableTextViewList.add(textView);
-            mOriginalTextSizes.put(textView, textView.getTextSize());
         }
+
+
     }
 
     /**
@@ -87,15 +87,22 @@ public class ZoomMessageListItem extends LinearLayout {
      *
      * @param fontSize {@link java.lang.Integer}
      */
-    public void setZoomScale(final float scale) {
+    public void setZoomFontSize(final int fontSize) {
+        mZoomFontSize = fontSize;
+        handleZoomFontSize();
+    }
+
+    /**
+     * "Zoom" the font size to mZoomFontSize, if a handler is attached to this view.
+     */
+    private void handleZoomFontSize() {
         Handler handler = getHandler();
         if (handler != null) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     for (TextView textView : mZoomableTextViewList) {
-                        float origTextSize = mOriginalTextSizes.get(textView);
-                        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, origTextSize * scale);
+                        textView.setTextSize(mZoomFontSize);
                     }
                 }
             });

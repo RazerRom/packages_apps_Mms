@@ -398,6 +398,7 @@ public class MessageListItem extends ZoomMessageListItem implements
                                             mMessageItem.mHighlight,
                                             mMessageItem.mTextContentType));
 
+        mBodyTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mZoomFontSize);
         mDateView.setText(buildTimestampLine(msgSizeText + " " + mMessageItem.mTimestamp));
 
         updateSimIndicatorView(mMessageItem.mSubId);
@@ -723,6 +724,7 @@ public class MessageListItem extends ZoomMessageListItem implements
             }
         }
         drawRightStatusIndicator(mMessageItem);
+        mBodyTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mZoomFontSize);
         requestLayout();
     }
 
