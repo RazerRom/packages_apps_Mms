@@ -146,6 +146,7 @@ import android.widget.*;
 import android.widget.ImageView.ScaleType;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AbsListView;
 
 import com.android.contacts.common.util.MaterialColorMapUtils;
 import com.android.contacts.common.util.MaterialColorMapUtils.MaterialPalette;
@@ -4475,6 +4476,25 @@ public class ComposeMessageActivity extends Activity
                 if (view != null) {
                     ((MessageListItem) view).onMessageListItemClick();
                 }
+            }
+        });
+        mMsgListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private boolean scrolling = false;
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+              if (mIsKeyboardOpen && scrolling) {
+                  final int first = mMsgListView.getFirstVisiblePosition();
+                  final int last = mMsgListView.getLastVisiblePosition();
+                  final int count = mMsgListAdapter.getCount();
+                  if (count > (last - first + 1)) {
+                      hideKeyboard();
+                  }
+              }
+            }
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                scrolling = scrollState != OnScrollListener.SCROLL_STATE_IDLE;
             }
         });
         mMsgListView.setMultiChoiceModeListener(new ModeCallback());
