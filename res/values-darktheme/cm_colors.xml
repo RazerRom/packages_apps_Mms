@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--You are editing Mms' CM Specific Colors-->
+
+<resources>
+	<color name="compose_message_background_color">@android:color/black</color>
+    <color name="compose_message_text_color">@android:color/white</color>
+    <color name="compose_message_divider_color">@*android:color/theme_color_common_color</color>
+	<color name="message_link_text_color">#ff9d9d9d</color>
+    <color name="search_activity_background_color">@android:color/black</color>
+</resources>

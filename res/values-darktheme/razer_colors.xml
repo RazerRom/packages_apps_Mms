@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- You are editing Mms' Razer Specific Colors -->
+
+<resources>
+	<!-- Razer 5.0.2 Mms Colors -->
+		<color name="background">@android:color/black</color>
+	
+    <!-- Conversation list view default colors -->
+		<color name="default_conv_list_background">@*android:color/theme_color_app_background</color>
+		<color name="default_read_bg">@android:color/transparent</color>
+		<color name="default_read_contact">@android:color/white</color>
+		<color name="default_read_subject">@*android:color/theme_color_light_color</color>
+		<color name="default_read_date">@android:color/white</color>
+		<color name="default_read_count">@android:color/white</color>
+		<color name="default_unread_bg">@*android:color/theme_color_common_color</color>
+		<color name="default_unread_contact">@android:color/white</color>
+		<color name="default_unread_subject">@*android:color/theme_color_light_color</color>
+		<color name="default_unread_date">@android:color/white</color>
+		<color name="default_unread_count">@android:color/white</color>
+	
+    <!-- Messages list view default colors -->
+		<color name="default_message_background">@*android:color/theme_color_app_background</color>
+		<color name="default_recv_text_bg">@*android:color/theme_color</color>
+		<color name="default_recv_contact_color">@*android:color/theme_color</color>
+		<color name="default_recv_textcolor">@android:color/white</color>
+		<color name="default_recv_datecolor">@*android:color/theme_color_common_color</color>
+		<color name="default_sent_text_bg">@*android:color/theme_color</color>
+		<color name="default_sent_contact_color">@*android:color/theme_color</color>
+		<color name="default_sent_textcolor">@android:color/white</color>
+		<color name="default_sent_datecolor">@*android:color/theme_color_common_color</color>
+</resources>
