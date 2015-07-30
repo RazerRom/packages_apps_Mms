@@ -420,7 +420,7 @@ public class ComposeMessageActivity extends Activity
 
     private AsyncDialog mAsyncDialog;   // Used for background tasks.
 
-    private String mDebugRecipients;
+    private ContactList mRecipients;
 
     // custom background
     private Bitmap mImageBackground;
@@ -513,6 +513,8 @@ public class ComposeMessageActivity extends Activity
     private UnicodeFilter mUnicodeFilter = null;
 
     private AddNumbersTask mAddNumbersTask;
+
+    boolean isNotProcessingNumbers = true;
 
     // signature
     private String mSignature;
@@ -1000,8 +1002,7 @@ public class ComposeMessageActivity extends Activity
         } else {
             // The recipients editor is still open. Make sure we use what's showing there
             // as the destination.
-            ContactList contacts = mRecipientsEditor.constructContactsFromInput(false);
-            mDebugRecipients = contacts.serialize();
+            mRecipients = mRecipientsEditor.constructContactsFromInput(false);
             sendMsimMessage(true, subIds[0]);
         }
     }
@@ -1030,8 +1031,7 @@ public class ComposeMessageActivity extends Activity
         } else {
             // The recipients editor is still open. Make sure we use what's showing there
             // as the destination.
-            ContactList contacts = mRecipientsEditor.constructContactsFromInput(false);
-            mDebugRecipients = contacts.serialize();
+            mRecipients = mRecipientsEditor.constructContactsFromInput(false);
             if ((TelephonyManager.getDefault().getPhoneCount()) > 1) {
                 sendMsimMessage(true);
             } else {
@@ -1096,27 +1096,29 @@ public class ComposeMessageActivity extends Activity
                 return;
             }
 
-            mWorkingMessage.setWorkingRecipients(mRecipientsEditor.getNumbers());
-            mWorkingMessage.setHasEmail(mRecipientsEditor.containsEmail(), true);
+            if (isNotProcessingNumbers) {
+                mWorkingMessage.setWorkingRecipients(mRecipientsEditor.getNumbers());
+                mWorkingMessage.setHasEmail(mRecipientsEditor.containsEmail(), true);
 
-            checkForTooManyRecipients();
-            // If pick recipients from Contacts,
-            // then only update title once when process finished
-            if (mIsProcessPickedRecipients) {
-                 return;
+                checkForTooManyRecipients();
+                // If pick recipients from Contacts,
+                // then only update title once when process finished
+                if (mIsProcessPickedRecipients) {
+                     return;
+                }
+
+                if (mRecipientsPickList != null) {
+                    // Update UI with mRecipientsPickList, which is picked from
+                    // People.
+                    updateTitle(mRecipientsPickList);
+                    mRecipientsPickList = null;
+                } else {
+                    updateTitleForRecipientsChange(s);
+                }
+
+                // If we have gone to zero recipients, disable send button.
+                updateSendButtonState();
             }
-
-            if (mRecipientsPickList != null) {
-                // Update UI with mRecipientsPickList, which is picked from
-                // People.
-                updateTitle(mRecipientsPickList);
-                mRecipientsPickList = null;
-            } else {
-                updateTitleForRecipientsChange(s);
-            }
-
-            // If we have gone to zero recipients, disable send button.
-            updateSendButtonState();
         }
     };
 
@@ -1842,14 +1844,21 @@ public class ComposeMessageActivity extends Activity
                 }
                 break;
             }
-            default: {
+            case 2:
+            case 3:
                 // Handle multiple recipients
                 title = list.formatNames(", ");
-                subTitle = getResources().getQuantityString(R.plurals.recipient_count, cnt, cnt);
+                subTitle = getResources().getQuantityString(R.plurals.recipient_count, cnt,
+                        cnt);
                 break;
+            default: {
+                // Handle many recipients
+                title = getResources().getQuantityString(R.plurals.recipient_count, cnt,
+                        cnt);
+                subTitle = null;
             }
         }
-        mDebugRecipients = list.serialize();
+        mRecipients = list;
 
         if (cnt > 0 && !mAccentColorLoaded && !mLoadingAccentColor) {
             final Contact contact = list.get(0);
@@ -2188,8 +2197,6 @@ public class ComposeMessageActivity extends Activity
             log("update title, mConversation=" + mConversation.toString());
         }
 
-        updateTitle(mConversation.getRecipients());
-
         if (isForwardedMessage && isRecipientsEditorVisible()) {
             // The user is forwarding the message to someone. Put the focus on the
             // recipient editor rather than in the message editor.
@@ -2421,8 +2428,6 @@ public class ComposeMessageActivity extends Activity
         if (Log.isLoggable(LogTag.APP, Log.VERBOSE)) {
             log("update title, mConversation=" + mConversation.toString());
         }
-
-        updateTitle(mConversation.getRecipients());
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -3738,7 +3743,9 @@ public class ComposeMessageActivity extends Activity
             super.onPreExecute();
             mPD = new ProgressDialog(ComposeMessageActivity.this);
             mPD.setMessage(getString(R.string.adding_selected_recipients_dialog_text));
+            mPD.setCancelable(false);
             mPD.show();
+            isNotProcessingNumbers = false;
         }
 
         @Override
@@ -3760,6 +3767,7 @@ public class ComposeMessageActivity extends Activity
             if (mPD != null && mPD.isShowing()) {
                 mPD.dismiss();
             }
+            isNotProcessingNumbers = true;
         }
     }
 
@@ -4747,16 +4755,17 @@ public class ComposeMessageActivity extends Activity
                 && !mWorkingMessage.requiresMms()) {
             mTextEditor.requestFocus();
         }
+        String mCurrentRecipients = mRecipients.serialize();
 
         if (!mSendingMessage) {
             if (LogTag.SEVERE_WARNING) {
                 String sendingRecipients = mConversation.getRecipients().serialize();
-                if (!sendingRecipients.equals(mDebugRecipients)) {
+                if (DEBUG && !sendingRecipients.equals(mCurrentRecipients)) {
                     String workingRecipients = mWorkingMessage.getWorkingRecipients();
-                    if (!mDebugRecipients.equals(workingRecipients)) {
+                    if (!mCurrentRecipients.equals(workingRecipients)) {
                         LogTag.warnPossibleRecipientMismatch("ComposeMessageActivity.sendMessage" +
                                 " recipients in window: \"" +
-                                mDebugRecipients + "\" differ from recipients from conv: \"" +
+                                mCurrentRecipients + "\" differ from recipients from conv: \"" +
                                 sendingRecipients + "\" and working recipients: " +
                                 workingRecipients, this);
                     }
@@ -4782,7 +4791,7 @@ public class ComposeMessageActivity extends Activity
                 // If resend sms recipient is more than one, use mResendSmsRecipient
                 mWorkingMessage.send(mResendSmsRecipient);
             } else {
-                mWorkingMessage.send(mDebugRecipients);
+                mWorkingMessage.send(mCurrentRecipients);
             }
 
             mSentMessage = true;
@@ -4975,7 +4984,6 @@ public class ComposeMessageActivity extends Activity
                 }
             }
         }
-        addRecipientsListeners();
         updateThreadIdIfRunning();
 
         mSendDiscreetMode = intent.getBooleanExtra(KEY_EXIT_ON_SENT, false);
@@ -5497,7 +5505,9 @@ public class ComposeMessageActivity extends Activity
                     log("[CMA] onUpdate contact updated: " + updated);
                     log("[CMA] onUpdate recipients: " + recipients);
                 }
-                updateTitle(recipients);
+                if (recipients.size() > 0) {
+                    updateTitle(recipients);
+                }
 
                 // The contact information for one (or more) of the recipients has changed.
                 // Rebuild the message list so each MessageItem will get the last contact info.
