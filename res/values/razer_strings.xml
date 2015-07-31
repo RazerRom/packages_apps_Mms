@@ -24,7 +24,7 @@
     <string name="reset_android">Android</string>
     <string name="dialog_restart">Restart</string>
     <string name="dialog_cancel">Cancel</string>
-    <string name="reset_bliss">Bliss</string>
+    <string name="reset_razer">Razer</string>
     <string name="attention">Attention</string>
     <string name="enabled">Enabled</string>
     <string name="default_string">Default</string>
@@ -39,11 +39,11 @@
     <string name="background_title">Background</string>
     <string name="icon_title">Icon</string>
     <string name="reset_message">Reset all entries to default?</string>
-    <string name="reset_option_message">Reset values to\nAndroid- or Bliss default?</string>
+    <string name="reset_option_message">Reset values to\nAndroid- or Razer default?</string>
     <string name="category_general_title">General options</string>
-    <string name="dlg_reset_values_message">Reset values to\nAndroid- or Bliss default?</string>
+    <string name="dlg_reset_values_message">Reset values to\nAndroid- or Razer default?</string>
     <string name="dlg_reset_android">Android</string>
-    <string name="dlg_reset_bliss">Bliss</string>
+    <string name="dlg_reset_razer">Razer</string>
     <string name="reset_default_message">Reset default?</string>
     <string name="additional_options_title">Additional options</string>
     
@@ -52,11 +52,11 @@
     <!-- Color Picker -->
     <string name="dialog_color_picker_title">Color Picker</string>
     <string name="press_color_to_apply">Press on color below to apply</string>
-    <string name="palette_bliss_title">Bliss</string>
+    <string name="palette_razer_title">Razer</string>
     <string name="palette_material_title">Material</string>
     <string name="palette_rgb_title">RGB</string>
     <string name="reset_android_title">Android default</string>
-    <string name="reset_bliss_title">Bliss default</string>
+    <string name="reset_razer_title">Razer default</string>
     <string name="arrow_right">→</string>
     <string name="arrow_down">↓</string>
     <string name="hex">Hex:</string>
