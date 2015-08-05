@@ -73,6 +73,10 @@
     public static final String CONVERSATION_LIST_BACKGROUND = "conversation_list_background";
     public static final String CONV_CUSTOM_IMAGE = "conversation_list_image.jpg";
 
+    // Float Button
+    public static final String FLOAT_BUTTON = "float_button";
+    public static final String COMPOSE_BUTTON = "compose_button";
+
     // Text Size
     public static final String PREF_CONV_CONTACT_FONT_SIZE = "pref_conv_contact_font_size";
     public static final String PREF_CONV_FONT_SIZE = "pref_conv_font_size";

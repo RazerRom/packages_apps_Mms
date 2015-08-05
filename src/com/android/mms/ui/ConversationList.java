@@ -45,6 +45,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
@@ -76,7 +77,9 @@ import android.view.ViewParent;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnKeyListener;
 import android.widget.*;
+import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.FrameLayout;
 
 import com.android.mms.LogTag;
 import com.android.mms.MmsConfig;
@@ -86,6 +89,7 @@ import com.android.mms.data.ContactList;
 import com.android.mms.data.Conversation;
 import com.android.mms.data.Conversation.ConversationQueryHandler;
 import com.android.mms.data.RecipientIdCache;
+import com.android.mms.themes.ColorFilterMaker;
 import com.android.mms.themes.Constants;
 import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.transaction.SmsRejectedReceiver;
@@ -122,6 +126,12 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
     public static final int MENU_VIEW                 = 1;
     public static final int MENU_VIEW_CONTACT         = 2;
     public static final int MENU_ADD_TO_CONTACTS      = 3;
+
+    ImageView mComposeButton;
+    FrameLayout mFloatingButton;
+    private Resources res;
+    private int mFabColor;
+    private int mFabIconColor;
 
     public static final class DeleteInfo {
 
@@ -267,9 +277,20 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         }
 
         setupFilterSpinner();
+        res = getResources();
 
-        View actionButton = findViewById(R.id.floating_action_button);
-        actionButton.setOnClickListener(mComposeClickHandler);
+        mFabColor = sp.getInt(Constants.FLOAT_BUTTON, res.getColor(
+                R.color.float_button));
+        mFabIconColor = sp.getInt(Constants.COMPOSE_BUTTON, res.getColor(
+                R.color.compose_button));
+
+        mFloatingButton = (FrameLayout)findViewById(R.id.floating_action_button);
+        mComposeButton = (ImageView)findViewById(R.id.compose_button);
+
+        mFloatingButton.getBackground().setColorFilter(mFabColor, Mode.MULTIPLY);
+        mComposeButton.setColorFilter(mFabIconColor, Mode.MULTIPLY);
+
+        mComposeButton.setOnClickListener(mComposeClickHandler);
     }
 
     @Override

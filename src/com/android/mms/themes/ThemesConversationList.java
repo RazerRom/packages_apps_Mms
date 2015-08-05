@@ -72,6 +72,9 @@ public class ThemesConversationList extends PreferenceActivity implements
 
     // background
     private ColorPickerPreference mConvListBackground;
+    // Floating Action Button
+    private ColorPickerPreference mFloatButton;
+    private ColorPickerPreference mComposeButton;
     // conv list read
     private ColorPickerPreference mReadBg;
     private ColorPickerPreference mReadContact;
@@ -118,6 +121,10 @@ public class ThemesConversationList extends PreferenceActivity implements
         mCustomImage = findPreference("pref_custom_image");
         mConvListBackground = (ColorPickerPreference) findPreference(
                 Constants.CONVERSATION_LIST_BACKGROUND);
+        mFloatButton = (ColorPickerPreference) findPreference(
+                Constants.FLOAT_BUTTON);
+        mComposeButton = (ColorPickerPreference) findPreference(
+                Constants.COMPOSE_BUTTON);
         mContactFontSize = (TextSizeSeekBarPreference) findPreference(
                 Constants.PREF_CONV_CONTACT_FONT_SIZE);
         mFontSize = (TextSizeSeekBarPreference) findPreference(Constants.PREF_CONV_FONT_SIZE);
@@ -148,6 +155,8 @@ public class ThemesConversationList extends PreferenceActivity implements
 
     private void setListeners() {
         mConvListBackground.setOnPreferenceChangeListener(this);
+        mFloatButton.setOnPreferenceChangeListener(this);
+        mComposeButton.setOnPreferenceChangeListener(this);
         mReadBg.setOnPreferenceChangeListener(this);
         mReadContact.setOnPreferenceChangeListener(this);
         mReadCount.setOnPreferenceChangeListener(this);
@@ -164,6 +173,12 @@ public class ThemesConversationList extends PreferenceActivity implements
         Resources res = getResources();
         mConvListBackground.setSummary(ColorPickerPreference.convertToARGB(
                 sp.getInt(Constants.CONVERSATION_LIST_BACKGROUND, res.getColor(
+                R.color.default_conv_list_background))));
+        mFloatButton.setSummary(ColorPickerPreference.convertToARGB(
+                sp.getInt(Constants.FLOAT_BUTTON, res.getColor(
+                R.color.default_conv_list_background))));
+        mComposeButton.setSummary(ColorPickerPreference.convertToARGB(
+                sp.getInt(Constants.COMPOSE_BUTTON, res.getColor(
                 R.color.default_conv_list_background))));
         mReadBg.setSummary(ColorPickerPreference.convertToARGB(
                 sp.getInt(Constants.PREF_READ_BG, res.getColor(
@@ -203,6 +218,16 @@ public class ThemesConversationList extends PreferenceActivity implements
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mConvListBackground.setSummary(hex);
+            result = true;
+        } else if (preference == mFloatButton) {
+            String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
+                    .valueOf(newValue)));
+            mFloatButton.setSummary(hex);
+            result = true;
+        } else if (preference == mComposeButton) {
+            String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
+                    .valueOf(newValue)));
+            mComposeButton.setSummary(hex);
             result = true;
         } else if (preference == mReadBg) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String

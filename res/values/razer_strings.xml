@@ -133,5 +133,9 @@
     <string name="widget_senders_text_color">Senders text</string>
     <string name="widget_subject_text_color">Subject text</string>
     <string name="widget_date_text_color">Date text</string>
+    <!-- Floating Action Button -->
+    <string name="fab_colors">Floating Action Button</string>
+    <string name="fab_button_background_color">Background color</string>
+    <string name="fab_icon_color">Icon color</string>
 
 </resources>

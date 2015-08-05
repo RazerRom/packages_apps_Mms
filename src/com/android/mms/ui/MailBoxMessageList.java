@@ -36,9 +36,21 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SqliteWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,7 +68,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
+import android.widget.*;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -70,6 +85,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
 import android.widget.Toolbar;
 
 import com.android.internal.telephony.PhoneConstants;
@@ -77,6 +94,8 @@ import com.android.mms.data.Contact;
 import com.android.mms.data.Conversation;
 import com.android.mms.LogTag;
 import com.android.mms.R;
+import com.android.mms.themes.ColorFilterMaker;
+import com.android.mms.themes.Constants;
 import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.transaction.Transaction;
 import com.android.mms.transaction.TransactionBundle;
@@ -177,6 +196,13 @@ public class MailBoxMessageList extends ListActivity implements
 
     private CharSequence mSearchTitle;
 
+    ImageView mComposeButton;
+    FrameLayout mFloatingButton;
+    private Resources res;
+    private int mFabColor;
+    private int mFabIconColor;
+    private SharedPreferences sp;
+
     // add for obtain parameters from SearchActivityExtend
     private int mSearchModePosition = MessageUtils.SEARCH_MODE_CONTENT;
     private String mSearchKeyStr = "";
@@ -187,6 +213,8 @@ public class MailBoxMessageList extends ListActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         mQueryHandler = new BoxMsgListQueryHandler(getContentResolver());
         setContentView(R.layout.mailbox_list_screen);
@@ -209,9 +237,20 @@ public class MailBoxMessageList extends ListActivity implements
 
         mHandler = new Handler();
         handleIntent(getIntent());
+        res = getResources();
 
-        View composeButton = findViewById(R.id.floating_action_button);
-        composeButton.setOnClickListener(new View.OnClickListener() {
+        mFabColor = sp.getInt(Constants.FLOAT_BUTTON, res.getColor(
+                R.color.float_button));
+        mFabIconColor = sp.getInt(Constants.COMPOSE_BUTTON, res.getColor(
+                R.color.compose_button));
+
+        mFloatingButton = (FrameLayout)findViewById(R.id.floating_action_button);
+        mComposeButton = (ImageView)findViewById(R.id.compose_button);
+
+        mFloatingButton.getBackground().setColorFilter(mFabColor, Mode.MULTIPLY);
+        mComposeButton.setColorFilter(mFabIconColor, Mode.MULTIPLY);
+
+        mComposeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(ComposeMessageActivity.createIntent(

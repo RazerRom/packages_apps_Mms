@@ -101,4 +101,21 @@
 
     </PreferenceCategory>
 
+
+    <PreferenceCategory
+        android:key="floating_action_button"
+        android:title="@string/fab_colors">
+
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="float_button"
+            android:title="@string/fab_button_background_color"
+            android:defaultValue="@color/float_button" />
+
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="compose_button"
+            android:title="@string/fab_icon_color"
+            android:defaultValue="@color/compose_button" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

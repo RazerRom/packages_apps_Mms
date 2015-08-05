@@ -118,4 +118,8 @@
     <color name="widget_light_subject_textcolor_unread">#ff080808</color>
     <color name="widget_light_date_textcolor_unread">#ff141414</color>
 
+    <!--Floatin Action Button -->
+    <color name="float_button">#ffDC4C3C</color>
+    <color name="compose_button">#ffffffff</color>
+
 </resources>
