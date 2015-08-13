@@ -4494,7 +4494,7 @@ public class ComposeMessageActivity extends Activity
             }
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                scrolling = scrollState != OnScrollListener.SCROLL_STATE_IDLE;
+                scrolling = scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
             }
         });
         mMsgListView.setMultiChoiceModeListener(new ModeCallback());
